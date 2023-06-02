@@ -45,12 +45,25 @@ app.get('/api/getUsers', async(req, res) => {
 
 app.delete('/api/deleteUser/:email', async(req, res) => {
     try {
-        
         register = await pool.connect();
         const {email}= req.params
         await register.query(`DELETE FROM Users WHERE email='${email}'`);
         res.send("Deletado com sucesso!")
     } catch (error) {
         res.status(500).send('Erro na exclusão')
+    }
+})
+
+app.post('/api/updateUser/:email', async(req, res) => {
+    try {
+        register = await pool.connect();
+        const {email} = req.params
+        const { novoEmail, name}= req.body
+        console.log({email, novoEmail, name});
+        await register.query(`UPDATE Users SET nome='${name}', email='${novoEmail}' WHERE email='${email}';`);
+        res.send("alterado com sucesso!")
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Erro no update')
     }
 })
